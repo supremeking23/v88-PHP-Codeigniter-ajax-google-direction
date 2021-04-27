@@ -47,6 +47,11 @@
             text-align:center
         }
 
+        .directions{
+            display:none;
+        }
+        
+
     
     </style>
   </head>
@@ -71,6 +76,8 @@
             </div>
         </form>
 
+        <div class="loading-div d-flex justify-content-center"></div>
+
         <div class="directions">
             <h2>Directions from <span class="origin">Makati</span>, <span class="destination">Taguig</span></h2>
             <ol class="direction-list">
@@ -94,11 +101,19 @@
 
     <script>
         $(document).ready(function(){
+           
             $("form").submit(function(){
                 if($("#origin").val() == "" || $("#destination").val() == ""){
                     alert("both fields are required");
+                    return;
                 }
+                $('.loading-div').html(`<img src='<?= base_url()?>assets/img/loading.gif'>`);
                 $.post($(this).attr("action"),$(this).serialize(),function(response){
+                    $(".loading-div img").hide();
+                    $(".directions").show();
+
+                    $(".origin").html($("#origin").val());
+                    $(".destination").html($("#destination").val());
                     let html = ``;
                     // console.log(response.routes[0].legs[0].steps);
                     console.log(response.routes[0].legs[0].steps[0].html_instructions);
